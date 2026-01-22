@@ -228,6 +228,52 @@
             transform-origin: right center;
             border-radius: 5px 0 0 5px;
         }
+		
+		/* Page visibility control */
+		.page-functions,
+		.page-marriage {
+			position: absolute;
+			inset: 0;
+			opacity: 0;
+			pointer-events: none;
+			z-index: 0;
+			transition: opacity 0.4s ease;
+		}
+		
+		.page-functions.active,
+		.page-marriage.active {
+			opacity: 1;
+			pointer-events: auto;
+			z-index: 2; /* active page always on top */
+		}
+		
+		/* Function cards */
+		.function-card {
+			border: 1px solid #ddd;
+			padding: 1rem 1.2rem;
+			margin: 0.8rem 0;
+			width: 100%;
+			border-radius: 8px;
+			background: rgba(255,255,255,0.6);
+		}
+		
+		.function-title {
+			font-family: 'Cinzel', serif;
+			font-size: 1rem;
+			letter-spacing: 1px;
+			color: var(--wedding-dark);
+		}
+		
+		.function-time {
+			font-size: 0.9rem;
+			color: #777;
+			margin-top: 0.3rem;
+		}
+		
+		.next-page-btn {
+			margin-top: 1.8rem;
+		}
+
 
         /* Inside Pages */
         .inside-pages {
@@ -239,7 +285,7 @@
             box-shadow: 
                 inset 5px 0 20px rgba(0,0,0,0.1),
                 3px 3px 20px rgba(0,0,0,0.3);
-            display: ruby;
+            display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
@@ -248,10 +294,6 @@
             text-align: center;
             opacity: 0;
             transition: opacity 0.5s ease 0.8s;
-        }
-
-        .book.open .inside-pages {
-            opacity: 1;
         }
 
         /* Page lines decoration */
@@ -484,6 +526,7 @@
             .couple-names { font-size: 2.5rem; }
             .inside-pages { padding: 1.5rem; }
         }
+		
     </style>
 </head>
 <body>
@@ -516,9 +559,43 @@
                 <!-- Back Face (Visible on left when opened) -->
                 <div class="back-face"></div>
             </div>
+			
+			<!-- Inside Pages – Page 1 (Functions) -->
+			<div class="inside-pages page-functions" id="pageFunctions">
+				<div class="invite-header">Dhruv Gupta’s Wedding Functions</div>
+			
+				<div class="function-card">
+					<div class="function-title">Haldi Ceremony</div>
+					<div class="function-time">4 February · 10:00 AM</div>
+				</div>
+			
+				<div class="function-card">
+					<div class="function-title">Mandap & Mehndi</div>
+					<div class="function-time">5 February · 10:00 AM – 6:00 PM</div>
+				</div>
+			
+				<div class="location">
+					<div class="location-icon">📍</div>
+					<a class="location-link"
+					href="https://www.google.com/maps/search/?api=1&query=F-3/340A+Gali+No+3+Near+Neem+Chowk+Sangam+Vihar+New+Delhi+110080"
+					target="_blank" rel="noopener">
+						<div class="location-name">Function Venue</div>
+						<div class="location-address">
+							F-3/340A, Gali No-3, Near Neem Chowk
+						</div>
+						<div class="location-city">
+							Sangam Vihar, New Delhi 110080
+						</div>
+					</a>
+				</div>
+			
+				<button class="btn-wedding next-page-btn" id="goToMarriage">
+					View Wedding Invitation →
+				</button>
+			</div>
 
-            <!-- Inside Pages -->
-            <div class="inside-pages">
+            <!-- Inside Pages – Page 2 (Functions) -->
+            <div class="inside-pages page-marriage" id="pageMarriage">
                 <div class="invite-header">Together with our families</div>
 
                 <div class="couple-names">
@@ -568,29 +645,33 @@
         const frontCover = document.getElementById('frontCover');
         const closeBook = document.getElementById('closeBook');
 
-        frontCover.addEventListener('click', () => {
-            book.classList.add('open');
-        });
-
         closeBook.addEventListener('click', (e) => {
             e.stopPropagation();
             book.classList.remove('open');
         });
-
-        // Music toggle
-        const musicToggle = document.getElementById('musicToggle');
-        let isPlaying = false;
-
-        musicToggle.addEventListener('click', () => {
-            isPlaying = !isPlaying;
-            if (isPlaying) {
-                musicToggle.classList.add('playing');
-                musicToggle.textContent = '🎶';
-            } else {
-                musicToggle.classList.remove('playing');
-                musicToggle.textContent = '🎵';
-            }
-        });
+		
+		const pageFunctions = document.getElementById('pageFunctions');
+		const pageMarriage  = document.getElementById('pageMarriage');
+		const goToMarriage  = document.getElementById('goToMarriage');
+		
+		frontCover.addEventListener('click', () => {
+			book.classList.add('open');
+			pageFunctions.classList.add('active');
+			pageMarriage.classList.remove('active');
+		});
+		
+		goToMarriage.addEventListener('click', (e) => {
+			e.stopPropagation();
+			pageFunctions.classList.remove('active');
+			pageMarriage.classList.add('active');
+		});
+		
+		closeBook.addEventListener('click', (e) => {
+			e.stopPropagation();
+			book.classList.remove('open');
+			pageFunctions.classList.remove('active');
+			pageMarriage.classList.remove('active');
+		});
     </script>
 </body>
 </html>
